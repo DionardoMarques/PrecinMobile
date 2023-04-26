@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const UserRoutes = require("./routes/UserRoutes.js");
+const PostRoutes = require("./routes/PostRoutes.js");
 
 // const cors = require("cors");
 
@@ -15,6 +16,9 @@ app.use(express.json());
 
 // Routes User;
 app.use("/users", UserRoutes);
+
+// Routes Post
+app.use("/posts", PostRoutes);
 
 // Rotas
 app.get("/", (req, res) => {
