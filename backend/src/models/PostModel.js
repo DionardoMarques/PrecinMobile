@@ -14,7 +14,7 @@ const Post = mongoose.model(
 				type: String,
 			},
 			price: {
-				type: String,
+				type: Number,
 				required: true,
 			},
 			market: {
@@ -38,7 +38,7 @@ const Post = mongoose.model(
 				type: Array,
 			},
 			comments: {
-				type: Array,
+				type: Number,
 			},
 		},
 		{ timestamps: true }
