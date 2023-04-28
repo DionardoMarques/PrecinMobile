@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const getToken = require("./getToken");
+const getToken = require("../helpers/getToken");
 require("dotenv/config");
 
 // middleware to validate token

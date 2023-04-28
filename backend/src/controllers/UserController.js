@@ -210,4 +210,63 @@ module.exports = class UserController {
 		}
 		return;
 	}
+	static async increaseList(req, res) {
+		const id = req.params.id;
+		const ObjectId = mongoose.Types.ObjectId;
+		if (!ObjectId.isValid(id)) {
+			res.status(422).json({
+				message: `User with ${id} invalid.`,
+			});
+			return;
+		}
+		try {
+			const token = getToken(req);
+			const user = await getUserByToken(token);
+			if (user.listShoop.includes(id)) {
+				res.status(422).json({ message: "Post already list" });
+				return;
+			}
+			user.listShoop.push(id);
+			await User.findByIdAndUpdate(user._id, user);
+			res.status(201).json({
+				message: "The post was push with successfully!",
+			});
+			return;
+		} catch (error) {
+			res.status(500).json({ message: error });
+			return;
+		}
+	}
+	static async decreaseList(req, res) {
+		const id = req.params.id;
+		const ObjectId = mongoose.Types.ObjectId;
+		if (!ObjectId.isValid(id)) {
+			res.status(422).json({
+				message: `User with ${id} invalid.`,
+			});
+			return;
+		}
+		try {
+			const token = getToken(req);
+			const user = await getUserByToken(token);
+			// const vaw = false;
+			for (var i = 0; i < user.listShoop.length; i++) {
+				if (user.listShoop[i] == id) {
+					user.listShoop.splice(i, 1);
+					// vaw = true;
+				}
+			}
+			// if (!vaw) {
+			// 	res.status(422).json({ message: "Post not already list" });
+			// 	return;
+			// }
+			await User.findByIdAndUpdate(user._id, user);
+			res.status(201).json({
+				message: "The post was deleted with successfully!",
+			});
+			return;
+		} catch (error) {
+			res.status(500).json({ message: error });
+		}
+	}
 };
