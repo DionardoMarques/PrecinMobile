@@ -1,4 +1,4 @@
-const mongoose = require("../config/newConfig");
+const mongoose = require("../database/db");
 const { Schema } = mongoose;
 
 // 10 fields in total for Post

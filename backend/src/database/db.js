@@ -1,19 +1,22 @@
-// const mongoose = require("mongoose");
-// const config = require("../config/config");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-// mongoose.connect(config.dbUri, {
-// 	useNewUrlParser: true,
-// 	useUnifiedTopology: true,
-// 	useCreateIndex: true,
-// });
+const user = process.env.USERDB;
+const password = encodeURIComponent(process.env.PASSWORDDB);
 
-// const db = mongoose.connection;
+async function main() {
+	await mongoose.connect(
+		`mongodb+srv://${user}:${password}@clusterprecin.7cy7hko.mongodb.net/?retryWrites=true&w=majority`,
+		{
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+		}
+	);
+}
+main()
+	.then(() => {
+		console.log("Conectado ao MongoDB");
+	})
+	.catch((err) => console.log(err));
 
-// db.on("error", console.error.bind(console, "Erro conexão MongoDB:"));
-
-// db.once("open", () => {
-// 	console.log("MongoDB conectado com sucesso!");
-// });
-
-// // module.exports = db;
-// module.exports = { db: db, mongoose: mongoose };
+module.exports = mongoose;
