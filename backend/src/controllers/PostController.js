@@ -1,8 +1,16 @@
 const Post = require("../models/PostModel");
 
+const getToken = require("../helpers/getToken");
+const getUserByToken = require("../helpers/getUserByToken");
+
+const mongoose = require("mongoose");
+
 module.exports = class PostController {
 	static async createPost(req, res) {
-		const { product, price, market, userID } = req.body;
+		const { product, price, market } = req.body;
+
+		const token = getToken(req);
+		const user = await getUserByToken(token);
 
 		// Validations
 		if (!product) {
@@ -20,12 +28,10 @@ module.exports = class PostController {
 			return;
 		}
 
-		if (!userID) {
-			res.status(422).json({ message: "The ID of user is required!" });
+		if (user.type == false) {
+			res.status(422).json({ message: "The type must be true" });
 			return;
-		}
-		// Valid user ID inputed for the user, following the natural flux for the post creation
-		else {
+		} else {
 			// Create Post
 			const post = new Post({
 				product: product,
@@ -33,7 +39,7 @@ module.exports = class PostController {
 				price: price,
 				market: market,
 				address: "",
-				userID: userID,
+				userID: { _id: user._id },
 				userEmail: "",
 				precin: [],
 				precao: [],
@@ -62,5 +68,134 @@ module.exports = class PostController {
 		res.status(200).json({
 			posts: posts,
 		});
+	}
+
+	static async getUserPosts(req, res) {
+		const token = getToken(req);
+		const user = await getUserByToken(token);
+		const posts = await Post.find({ "userID._id": user._id }).sort(
+			"-createdAt"
+		);
+
+		res.status(200).json({ posts });
+	}
+
+	static async getPostByID(req, res) {
+		const id = req.params.id;
+		const ObjectId = mongoose.Types.ObjectId;
+		const post = await Post.findById(id);
+
+		if (!ObjectId.isValid(id)) {
+			res.status(422).json({
+				message: `Post with ${id} invalid.`,
+			});
+
+			return;
+		}
+
+		if (!post) {
+			res.status(404).json({
+				message: "Post not found.",
+			});
+
+			return;
+		}
+
+		if (!id) {
+			res.status(422).json({
+				message: `Post with ${id} not found.`,
+			});
+
+			return;
+		} else {
+			res.status(200).json({ post });
+		}
+	}
+
+	static async updatePost(req, res) {
+		const { product, price, market } = req.body;
+
+		const id = req.params.id;
+		const post = await Post.findOne({ _id: id });
+
+		const token = getToken(req);
+		const user = await getUserByToken(token);
+
+		const updateData = {};
+
+		const ObjectId = mongoose.Types.ObjectId;
+
+		if (!ObjectId.isValid(id)) {
+			res.status(422).json({
+				message: `Post with ${id} invalid.`,
+			});
+
+			return;
+		}
+
+		if (post.userID._id.toString() !== user._id.toString()) {
+			res.status(422).json({ message: "Access denied! Not your post" });
+
+			return;
+		}
+
+		// Validations
+		if (!product) {
+			res.status(422).json({ message: "The name of product is required!" });
+			return;
+		} else {
+			updateData.product = product;
+		}
+
+		if (!price) {
+			res.status(422).json({ message: "The price of product is required!" });
+			return;
+		} else {
+			updateData.price = price;
+		}
+
+		if (!market) {
+			res.status(422).json({ message: "The name of market is required!" });
+			return;
+		} else {
+			updateData.market = market;
+		}
+
+		await Post.findByIdAndUpdate(id, updateData);
+
+		res.status(200).json({ message: "Post updated successfully!" });
+	}
+
+	static async deletePost(req, res) {
+		const id = req.params.id;
+		const post = await Post.findOne({ _id: id });
+
+		const token = getToken(req);
+		const user = await getUserByToken(token);
+
+		const ObjectId = mongoose.Types.ObjectId;
+
+		if (!ObjectId.isValid(id)) {
+			res.status(422).json({
+				message: `Post with ${id} invalid.`,
+			});
+			return;
+		}
+
+		if (!post) {
+			res.status(404).json({ message: "Post not found" });
+
+			return;
+		}
+
+		if (post.userID._id.toString() !== user._id.toString()) {
+			res.status(422).json({ message: "Access denied!" });
+
+			return;
+		}
+
+		await Post.findByIdAndRemove(id);
+
+		res.status(200).json({ message: "Post removed successfully!" });
 	}
 };

@@ -10,9 +10,6 @@ const Post = mongoose.model(
 				type: String,
 				required: true,
 			},
-			productImage: {
-				type: String,
-			},
 			price: {
 				type: Number,
 				required: true,
@@ -21,25 +18,13 @@ const Post = mongoose.model(
 				type: String,
 				required: true,
 			},
-			address: {
-				type: String,
-			},
-			userID: {
-				type: String,
-				required: true,
-			},
-			userEmail: {
-				type: String,
-			},
-			precin: {
-				type: Array,
-			},
-			precao: {
-				type: Array,
-			},
-			comments: {
-				type: Number,
-			},
+			productImage: String,
+			address: String,
+			userID: Object,
+			userEmail: String,
+			precin: Array,
+			precao: Array,
+			comments: Number,
 		},
 		{ timestamps: true }
 	)
