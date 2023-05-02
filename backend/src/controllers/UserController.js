@@ -1,4 +1,5 @@
 const User = require("../models/UserModel");
+const Post = require("../models/PostModel");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -118,6 +119,7 @@ module.exports = class UserController {
 			currentUser = null;
 		}
 		res.status(200).send(currentUser);
+		return;
 	}
 	static async getUserById(req, res) {
 		const id = req.params.id;
@@ -211,6 +213,8 @@ module.exports = class UserController {
 		return;
 	}
 	static async increaseList(req, res) {
+		const token = getToken(req);
+		const user = await getUserByToken(token);
 		const id = req.params.id;
 		const ObjectId = mongoose.Types.ObjectId;
 		if (!ObjectId.isValid(id)) {
@@ -220,8 +224,6 @@ module.exports = class UserController {
 			return;
 		}
 		try {
-			const token = getToken(req);
-			const user = await getUserByToken(token);
 			if (user.listShoop.includes(id)) {
 				res.status(422).json({ message: "Post already list" });
 				return;
@@ -238,6 +240,8 @@ module.exports = class UserController {
 		}
 	}
 	static async decreaseList(req, res) {
+		const token = getToken(req);
+		const user = await getUserByToken(token);
 		const id = req.params.id;
 		const ObjectId = mongoose.Types.ObjectId;
 		if (!ObjectId.isValid(id)) {
@@ -247,8 +251,6 @@ module.exports = class UserController {
 			return;
 		}
 		try {
-			const token = getToken(req);
-			const user = await getUserByToken(token);
 			// const vaw = false;
 			for (var i = 0; i < user.listShoop.length; i++) {
 				if (user.listShoop[i] == id) {
@@ -267,6 +269,134 @@ module.exports = class UserController {
 			return;
 		} catch (error) {
 			res.status(500).json({ message: error });
+		}
+	}
+	static async precin(req, res) {
+		const token = getToken(req);
+		const user = await getUserByToken(token);
+		const id = req.params.id;
+		let vaw;
+		const ObjectId = mongoose.Types.ObjectId;
+		if (!ObjectId.isValid(id)) {
+			res.status(422).json({
+				message: `User with ${id} invalid.`,
+			});
+			return;
+		}
+		const post = await Post.findById(id);
+		if (!post) {
+			res.status(404).json({
+				message: "Post not found.",
+			});
+			return;
+		}
+		if (user.precin.includes(id)) {
+			vaw = false;
+			for (var i = 0; i < user.precin.length; i++) {
+				if (user.precin[i] == id) {
+					user.precin.splice(i, 1);
+				}
+			}
+			for (var p = 0; p < post.precin.length; p++) {
+				if (post.precin[p] == user.id) {
+					post.precin.splice(p, 1);
+				}
+			}
+		} else {
+			vaw = true;
+			for (var i = 0; i < user.precao.length; i++) {
+				if (user.precao[i] == id) {
+					user.precao.splice(i, 1);
+				}
+			}
+			for (var p = 0; p < post.precao.length; p++) {
+				if (post.precao[p] == user.id) {
+					post.precao.splice(p, 1);
+				}
+			}
+			user.precin.push(id);
+			post.precin.push(user.id);
+		}
+		try {
+			await User.findByIdAndUpdate(user._id, user);
+			await Post.findByIdAndUpdate(post._id, post);
+			if (vaw) {
+				res.status(201).json({
+					message: "The precin was increase with successfully!",
+				});
+			} else {
+				res.status(201).json({
+					message: "The precin was decrease with successfully!",
+				});
+			}
+			return;
+		} catch (error) {
+			res.status(500).json({ message: error });
+			return;
+		}
+	}
+	static async precao(req, res) {
+		const token = getToken(req);
+		const user = await getUserByToken(token);
+		const id = req.params.id;
+		let vaw;
+		const ObjectId = mongoose.Types.ObjectId;
+		if (!ObjectId.isValid(id)) {
+			res.status(422).json({
+				message: `User with ${id} invalid.`,
+			});
+			return;
+		}
+		const post = await Post.findById(id);
+		if (!post) {
+			res.status(404).json({
+				message: "Post not found.",
+			});
+			return;
+		}
+		if (user.precao.includes(id)) {
+			vaw = false;
+			for (var i = 0; i < user.precao.length; i++) {
+				if (user.precao[i] == id) {
+					user.precao.splice(i, 1);
+				}
+			}
+			for (var p = 0; p < post.precao.length; p++) {
+				if (post.precao[p] == user.id) {
+					post.precao.splice(p, 1);
+				}
+			}
+		} else {
+			vaw = true;
+			for (var i = 0; i < user.precin.length; i++) {
+				if (user.precin[i] == id) {
+					user.precin.splice(i, 1);
+				}
+			}
+			for (var p = 0; p < post.precin.length; p++) {
+				if (post.precin[p] == user.id) {
+					post.precin.splice(p, 1);
+				}
+			}
+			user.precao.push(id);
+			post.precao.push(user.id);
+		}
+		try {
+			await User.findByIdAndUpdate(user._id, user);
+			await Post.findByIdAndUpdate(post._id, post);
+			if (vaw) {
+				res.status(201).json({
+					message: "The precao was increase with successfully!",
+				});
+			} else {
+				res.status(201).json({
+					message: "The precao was decrease with successfully!",
+				});
+			}
+			return;
+		} catch (error) {
+			res.status(500).json({ message: error });
+			return;
 		}
 	}
 };
