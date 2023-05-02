@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 
 module.exports = class PostController {
 	static async createPost(req, res) {
-		const { product, price, market } = req.body;
+		const { product, productImage, price, market, address } = req.body;
 
 		const token = getToken(req);
 		const user = await getUserByToken(token);
@@ -35,10 +35,10 @@ module.exports = class PostController {
 			// Create Post
 			const post = new Post({
 				product: product,
-				productImage: "",
+				productImage: productImage,
 				price: price,
 				market: market,
-				address: "",
+				address: address,
 				userID: { _id: user._id },
 				userEmail: "",
 				precin: [],
@@ -65,9 +65,15 @@ module.exports = class PostController {
 	static async getPosts(req, res) {
 		const posts = await Post.find().sort("-createdAt");
 
-		res.status(200).json({
-			posts: posts,
-		});
+		if (posts.length == 0) {
+			res.status(200).json({
+				message: "No posts to return.",
+			});
+		} else {
+			res.status(200).json({
+				posts: posts,
+			});
+		}
 	}
 
 	static async getUserPosts(req, res) {
@@ -77,17 +83,36 @@ module.exports = class PostController {
 			"-createdAt"
 		);
 
-		res.status(200).json({ posts });
+		if (posts.length == 0) {
+			res.status(200).json({
+				message: "No posts created by this user.",
+			});
+		} else {
+			res.status(200).json({ posts });
+		}
 	}
 
 	static async getPostByID(req, res) {
 		const id = req.params.id;
 		const ObjectId = mongoose.Types.ObjectId;
-		const post = await Post.findById(id);
+
+		let post;
+
+		// Verifying if exists posts with the :id param exists inside the database
+		try {
+			post = await Post.findById(id);
+		} catch (error) {
+			res.status(500).json({
+				message: `An error occurred with the id: ${id}, please verify and try again.`,
+				error: error.message,
+			});
+
+			return;
+		}
 
 		if (!ObjectId.isValid(id)) {
 			res.status(422).json({
-				message: `Post with ${id} invalid.`,
+				message: `Post with ${id} is invalid.`,
 			});
 
 			return;
@@ -101,29 +126,33 @@ module.exports = class PostController {
 			return;
 		}
 
-		if (!id) {
-			res.status(422).json({
-				message: `Post with ${id} not found.`,
-			});
-
-			return;
-		} else {
-			res.status(200).json({ post });
-		}
+		res.status(200).json({ post });
 	}
 
 	static async updatePost(req, res) {
-		const { product, price, market } = req.body;
+		const { product, productImage, price, market, address } = req.body;
 
 		const id = req.params.id;
-		const post = await Post.findOne({ _id: id });
+		const ObjectId = mongoose.Types.ObjectId;
 
 		const token = getToken(req);
 		const user = await getUserByToken(token);
 
 		const updateData = {};
 
-		const ObjectId = mongoose.Types.ObjectId;
+		let post;
+
+		// Verifying if exists posts with the :id param exists inside the database
+		try {
+			post = await Post.findOne({ _id: id });
+		} catch (error) {
+			res.status(500).json({
+				message: `An error occurred with the id: ${id}, please verify and try again.`,
+				error: error.message,
+			});
+
+			return;
+		}
 
 		if (!ObjectId.isValid(id)) {
 			res.status(422).json({
@@ -139,7 +168,7 @@ module.exports = class PostController {
 			return;
 		}
 
-		// Validations
+		// Required
 		if (!product) {
 			res.status(422).json({ message: "The name of product is required!" });
 			return;
@@ -161,6 +190,15 @@ module.exports = class PostController {
 			updateData.market = market;
 		}
 
+		// Not required
+		if (productImage) {
+			updateData.productImage = productImage;
+		}
+
+		if (address) {
+			updateData.address = address;
+		}
+
 		await Post.findByIdAndUpdate(id, updateData);
 
 		res.status(200).json({ message: "Post updated successfully!" });
@@ -168,12 +206,24 @@ module.exports = class PostController {
 
 	static async deletePost(req, res) {
 		const id = req.params.id;
-		const post = await Post.findOne({ _id: id });
+		const ObjectId = mongoose.Types.ObjectId;
 
 		const token = getToken(req);
 		const user = await getUserByToken(token);
 
-		const ObjectId = mongoose.Types.ObjectId;
+		let post;
+
+		// Verifying if exists posts with the :id param exists inside the database
+		try {
+			post = await Post.findOne({ _id: id });
+		} catch (error) {
+			res.status(500).json({
+				message: `An error occurred with the id: ${id}, please verify and try again.`,
+				error: error.message,
+			});
+
+			return;
+		}
 
 		if (!ObjectId.isValid(id)) {
 			res.status(422).json({
