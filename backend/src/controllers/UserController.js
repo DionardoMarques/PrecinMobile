@@ -60,7 +60,6 @@ module.exports = class UserController {
 			name: name,
 			email: email,
 			password: passwordHash,
-			listPublic: [],
 			listShoop: [],
 			precao: [],
 			precin: [],
@@ -145,11 +144,14 @@ module.exports = class UserController {
 		//Check if user exists
 		const token = getToken(req);
 		const user = await getUserByToken(token);
-		const { name, email, password, confirmpassword, image } = req.body;
+		const { name, email, password, confirmpassword } = req.body;
+
+		let image = "";
 
 		if (req.file) {
-			user.image = req.file.filename;
+			image = req.file.filename;
 		}
+		user.image = image;
 
 		//validations
 		if (!name) {
@@ -180,7 +182,6 @@ module.exports = class UserController {
 			const passwordHash = await bcrypt.hash(password, salt);
 			user.password = passwordHash;
 		}
-		user.image = image;
 		try {
 			// returns user updated data
 			await User.findOneAndUpdate(
