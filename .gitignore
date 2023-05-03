@@ -1,3 +1,23 @@
-backend/node_modules/
-backend/.env
-frontend/node_modules/
+# Global
+node_modules/
+
+# backend folder
+.env
+
+# frontend folder
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+
+# macOS
+.DS_Store
+
+# Temporary files created by Metro to check the health of the file watcher
+.metro-health-check*
