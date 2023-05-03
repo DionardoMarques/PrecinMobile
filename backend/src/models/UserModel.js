@@ -19,9 +19,6 @@ const User = mongoose.model(
 			image: {
 				type: String,
 			},
-			listPublic: {
-				type: Array,
-			},
 			listShoop: {
 				type: Array,
 			},

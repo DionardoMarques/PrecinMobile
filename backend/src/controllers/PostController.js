@@ -7,10 +7,16 @@ const mongoose = require("mongoose");
 
 module.exports = class PostController {
 	static async createPost(req, res) {
-		const { product, productImage, price, market, address } = req.body;
+		const { product, price, market, address } = req.body;
 
 		const token = getToken(req);
 		const user = await getUserByToken(token);
+
+		let productImage = "";
+
+		if (req.file) {
+			productImage = req.file.filename;
+		}
 
 		// Validations
 		if (!product) {
@@ -130,7 +136,7 @@ module.exports = class PostController {
 	}
 
 	static async updatePost(req, res) {
-		const { product, productImage, price, market, address } = req.body;
+		const { product, price, market, address } = req.body;
 
 		const id = req.params.id;
 		const ObjectId = mongoose.Types.ObjectId;
@@ -141,6 +147,13 @@ module.exports = class PostController {
 		const updateData = {};
 
 		let post;
+
+		let productImage = "";
+
+		if (req.file) {
+			productImage = req.file.filename;
+		}
+		updateData.productImage = productImage;
 
 		// Verifying if exists posts with the :id param exists inside the database
 		try {
