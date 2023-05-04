@@ -1,17 +1,15 @@
+import { Routes } from "./src/routes";
+import { THEME } from "./src/styles/theme";
+import { NativeBaseProvider, StatusBar } from "native-base";
 import {
 	useFonts,
-	Roboto_400Regular,
-	Roboto_700Bold,
-} from "@expo-google-fonts/roboto";
-
-import { THEME } from "./src/styles/theme";
-
-import { SignIn } from "./src/screens/Signin/SignIn";
-import { NativeBaseProvider, StatusBar } from "native-base";
+	Inter_400Regular,
+	Inter_700Bold,
+} from "@expo-google-fonts/inter";
 import { Loading } from "./src/components/Loading";
 
 export default function App() {
-	const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
+	const [fontsLoaded] = useFonts({ Inter_400Regular, Inter_700Bold });
 
 	return (
 		<NativeBaseProvider theme={THEME}>
@@ -20,7 +18,7 @@ export default function App() {
 				backgroundColor="transparent"
 				translucent
 			/>
-			{fontsLoaded ? <SignIn /> : <Loading />}
+			{fontsLoaded ? <Routes /> : <Loading />}
 		</NativeBaseProvider>
 	);
 }
