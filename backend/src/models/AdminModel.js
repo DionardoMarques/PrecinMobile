@@ -1,7 +1,8 @@
 const mongoose = require("../database/db");
 const { Schema } = mongoose;
-const User = mongoose.model(
-	"User",
+
+const Admin = mongoose.model(
+	"Admin",
 	new Schema(
 		{
 			name: {
@@ -20,21 +21,9 @@ const User = mongoose.model(
 				type: Number,
 				required: true,
 			},
-			image: {
-				type: String,
-			},
-			listShoop: {
-				type: Array,
-			},
-			precao: {
-				type: Array,
-			},
-			precin: {
-				type: Array,
-			},
 		},
 		{ timestamps: true }
 	)
 );
 
-module.exports = User;
+module.exports = Admin;

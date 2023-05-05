@@ -60,6 +60,7 @@ module.exports = class UserController {
 			name: name,
 			email: email,
 			password: passwordHash,
+			permission: 0,
 			listShoop: [],
 			precao: [],
 			precin: [],
