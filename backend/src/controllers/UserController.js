@@ -109,17 +109,33 @@ module.exports = class UserController {
 	// User in the system
 	static async checkUser(req, res) {
 		let currentUser;
+		let user;
 		if (req.headers.authorization) {
 			const token = getToken(req);
-			// variable ambit
-			const secret = process.env.JWT_TOKEN;
-			const decoded = jwt.verify(token, secret);
-			currentUser = await User.findById(decoded.id).select("-password");
+			try {
+				user = await getUserByToken(token);
+			} catch (error) {
+				res.status(401).json({ message: "Token invalid" });
+				return;
+			}
+			try {
+				currentUser = await User.findById(user.id).select("-password");
+			} catch (error) {
+				res.status(422).json({
+					message: `User not find.`,
+				});
+			}
+			if (currentUser) {
+				res.status(200).send(currentUser);
+				return;
+			}
+			return;
 		} else {
-			currentUser = null;
+			res.status(401).json({
+				message: "No permission, because it hasn't bearer token",
+			});
+			return;
 		}
-		res.status(200).send(currentUser);
-		return;
 	}
 	static async getUserById(req, res) {
 		const id = req.params.id;
@@ -144,7 +160,13 @@ module.exports = class UserController {
 	static async editUser(req, res) {
 		//Check if user exists
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 		const { name, email, password, confirmpassword } = req.body;
 
 		let image = "";
@@ -202,13 +224,25 @@ module.exports = class UserController {
 	static async deleteUser(req, res) {
 		//Check if user exists
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
 		try {
-			await user.delete();
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
+		try {
+			await User.findByIdAndRemove(user._id);
 			res.status(200).json({
 				message: `User deleted with successufuly`,
 			});
 		} catch (err) {
+			if (!user) {
+				res.status(422).json({
+					message: `User not find.`,
+				});
+				return;
+			}
 			res.status(500).json({ message: err });
 			return;
 		}
@@ -216,7 +250,13 @@ module.exports = class UserController {
 	}
 	static async increaseList(req, res) {
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 		const id = req.params.id;
 		const ObjectId = mongoose.Types.ObjectId;
 		if (!ObjectId.isValid(id)) {
@@ -243,7 +283,13 @@ module.exports = class UserController {
 	}
 	static async decreaseList(req, res) {
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 		const id = req.params.id;
 		const ObjectId = mongoose.Types.ObjectId;
 		if (!ObjectId.isValid(id)) {
@@ -275,7 +321,13 @@ module.exports = class UserController {
 	}
 	static async precin(req, res) {
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 		const id = req.params.id;
 		let vaw;
 		const ObjectId = mongoose.Types.ObjectId;
@@ -339,7 +391,13 @@ module.exports = class UserController {
 	}
 	static async precao(req, res) {
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 		const id = req.params.id;
 		let vaw;
 		const ObjectId = mongoose.Types.ObjectId;

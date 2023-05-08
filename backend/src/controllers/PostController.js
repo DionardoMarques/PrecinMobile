@@ -10,7 +10,13 @@ module.exports = class PostController {
 		const { product, price, market, address } = req.body;
 
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 
 		let productImage = "";
 
@@ -84,7 +90,13 @@ module.exports = class PostController {
 
 	static async getUserPosts(req, res) {
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 		const posts = await Post.find({ "userID._id": user._id }).sort(
 			"-createdAt"
 		);
@@ -142,7 +154,13 @@ module.exports = class PostController {
 		const ObjectId = mongoose.Types.ObjectId;
 
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 
 		const updateData = {};
 
@@ -222,7 +240,13 @@ module.exports = class PostController {
 		const ObjectId = mongoose.Types.ObjectId;
 
 		const token = getToken(req);
-		const user = await getUserByToken(token);
+		let user;
+		try {
+			user = await getUserByToken(token);
+		} catch (error) {
+			res.status(401).json({ message: "Token invalid" });
+			return;
+		}
 
 		let post;
 
