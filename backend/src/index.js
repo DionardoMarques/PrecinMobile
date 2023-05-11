@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 
 // Routes
-const UserRoutes = require("../src/routes/UserRoutes.js");
-const PostRoutes = require("../src/routes/PostRoutes.js");
-const AdminRoutes = require("../src/routes/AdminRoutes.js");
+const UserRoutes = require("./routes/UserRoutes.js");
+const PostRoutes = require("./routes/PostRoutes.js");
+const AdminRoutes = require("./routes/AdminRoutes.js");
 
 // Iniciando o servidor na porta 3000
 const PORT = process.env.PORT || 3000;
