@@ -1,12 +1,18 @@
 {
   "version": 2,
-  "routes": [
-    { "src": "/api/(.*)", "dest": "backend/src/app.js" }
-  ],
   "builds": [
     {
-      "src": "package.json",
+      "src": "app.js",
       "use": "@now/node"
     }
-  ]
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "app.js"
+    }
+  ],
+  "env": {
+    "PORT": "3000"
+  }
 }
