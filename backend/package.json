@@ -2,11 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "api/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon backend/src/index.js",
-    "build": "npm run build"
+    "start": "nodemon backend/api/index.js"
   },
   "keywords": [],
   "author": "",
