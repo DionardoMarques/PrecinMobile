@@ -10,8 +10,15 @@ export const THEME = extendTheme({
 		},
 		blue: {
 			700: "#00875F",
-			500: "#00B37E",
+			500: "rgba(111, 162, 242, 1)",
 			300: "#04D361",
+		},
+		buttons: {
+			default: "rgba(37, 108, 225, 1)",
+			hover: "rgba(111, 162, 242, 1)",
+		},
+		hover: {
+			default: "rgba(111, 162, 242, 1)",
 		},
 		gray: {
 			700: "#121214",
