@@ -9,7 +9,7 @@ const AdminRoutes = require("./routes/AdminRoutes.js");
 const cors = require("cors");
 
 //Cors
-app.use(cors({ credentials: true, origin: "https://localhost:3000" }));
+app.use(cors());
 
 // Public folder for images
 app.use(express.static("public"));
