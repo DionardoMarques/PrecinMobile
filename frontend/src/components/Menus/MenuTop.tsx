@@ -1,9 +1,13 @@
+import { useContext } from "react";
 import { HStack, IconButton, Image, useTheme, Icon, Box } from "native-base";
 import { User, MagnifyingGlass } from "phosphor-react-native";
 import { InputSearch } from "../Inputs/InputSearch";
 
+import { AuthContext } from "../../contexts/UserContext";
+
 export function MenuTop(props) {
 	const { colors } = useTheme();
+	const { userInfo }: any = ({} = useContext(AuthContext));
 	return (
 		<HStack
 			w="full"
@@ -36,6 +40,18 @@ export function MenuTop(props) {
 				<></>
 			)}
 			<Box>
+				{/* {userInfo.image ? (
+					<Image
+						size={27}
+						borderRadius={100}
+						source={{
+							uri: "https://wallpaperaccess.com/full/317501.jpg",
+						}}
+						alt="Alternate Text"
+					/>
+				) : (
+					<IconButton icon={<User size={26} color={colors.white} />} />
+				)} */}
 				<IconButton icon={<User size={26} color={colors.white} />} />
 			</Box>
 		</HStack>
