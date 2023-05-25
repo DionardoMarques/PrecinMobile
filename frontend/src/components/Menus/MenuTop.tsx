@@ -20,6 +20,7 @@ export function MenuTop(props) {
 					size={27}
 					borderRadius={100}
 					source={require("../../../assets/logo.png")}
+					alt="Logo"
 				/>
 			</Box>
 			{props.search ? (

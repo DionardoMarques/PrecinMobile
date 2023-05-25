@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -15,10 +15,14 @@ import { Envelope, Key, User } from "phosphor-react-native";
 
 import { InputCamp } from "../../components/Inputs/InputCamp";
 import { ButtonForm } from "../../components/Buttons/ButtonForm";
+
+import { AuthContext } from "../../contexts/UserContext";
+
 export function SignIn() {
 	//Controller
 	const [isDefault, setIsDefault] = useState(true);
-
+	//Register Api
+	const { register } = useContext(AuthContext);
 	const [isLoading, setIsLoading] = useState(false);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -30,6 +34,17 @@ export function SignIn() {
 
 	function handleSignIn() {
 		console.log("Oi");
+	}
+
+	function handlerCreate() {
+		const user = {
+			name: name,
+			email: email,
+			password: password,
+			confirmpassword: confirmPassword,
+		};
+		console.log(user);
+		register(user);
 	}
 
 	function handlerDefault() {
@@ -49,6 +64,7 @@ export function SignIn() {
 					size={150}
 					borderRadius={100}
 					source={require("../../../assets/logo.png")}
+					alt="Logo"
 				/>
 				<Heading color="gray.100" fontSize="xl" mt={20} mb={6}>
 					Login
@@ -85,13 +101,6 @@ export function SignIn() {
 				>
 					Não possui uma conta?
 				</Text>
-				{/* <Link
-					color={colors.white}
-					alignItems={"center"}
-					onPress={handlerRegister}
-				>
-					Já possui conta?
-				</Link> */}
 			</VStack>
 		);
 	} else {
@@ -101,6 +110,7 @@ export function SignIn() {
 					size={150}
 					borderRadius={100}
 					source={require("../../../assets/logo.png")}
+					alt="Logo"
 				/>
 				<Heading color="gray.100" fontSize="xl" mt={20} mb={6}>
 					Cadastro
@@ -144,7 +154,7 @@ export function SignIn() {
 					mb={2}
 					title="Cadastrar"
 					w="full"
-					onPress={handleSignIn}
+					onPress={handlerCreate}
 					isLoading={isLoading}
 				/>
 				<Text
