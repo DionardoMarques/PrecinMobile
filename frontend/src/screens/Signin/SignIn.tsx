@@ -22,7 +22,7 @@ export function SignIn() {
 	//Controller
 	const [isDefault, setIsDefault] = useState(true);
 	//Register Api
-	const { register } = useContext(AuthContext);
+	const { register, login }: any = ({} = useContext(AuthContext));
 	const [isLoading, setIsLoading] = useState(false);
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
@@ -33,7 +33,12 @@ export function SignIn() {
 	const { colors } = useTheme();
 
 	function handleSignIn() {
-		console.log("Oi");
+		const user = {
+			email: email,
+			password: password,
+		};
+		console.log(user);
+		login(user);
 	}
 
 	function handlerCreate() {
@@ -48,9 +53,6 @@ export function SignIn() {
 	}
 
 	function handlerDefault() {
-		// setTimeout(() => {
-		// 	navigation.navigate("register");
-		// }, 1000);
 		if (isDefault) {
 			setIsDefault(false);
 		} else {
