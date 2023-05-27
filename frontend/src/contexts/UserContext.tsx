@@ -4,10 +4,11 @@ import useAuth from "../services/useAuth";
 export const AuthContext = createContext({});
 
 function AuthProvider({ children }) {
-	const { register, authenticated, logout, login, userInfo } = useAuth();
+	const { register, authenticated, logout, login, checkUser, userInfo } =
+		useAuth();
 	return (
 		<AuthContext.Provider
-			value={{ register, authenticated, logout, login, userInfo }}
+			value={{ register, authenticated, logout, login, checkUser, userInfo }}
 		>
 			{children}
 		</AuthContext.Provider>
