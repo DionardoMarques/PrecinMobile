@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 
 // Routes
 const UserRoutes = require("./src/routes/UserRoutes.js");
@@ -13,12 +14,16 @@ app.listen(PORT, () => {
 });
 
 const cors = require("cors");
-
+// Config cors
 //Cors
-app.use(cors({ credentials: true, origin: "https://localhost:3000" }));
+// app.use(cors({ credentials: true, origin: "exp://192.168.15.60:19000" }));
+app.use(cors());
 
 // Public folder for images
-app.use(express.static("public"));
+app.use(
+	"/files",
+	express.static(path.resolve(__dirname, "src", "public", "images"))
+);
 
 // Middleware
 app.use(express.json());

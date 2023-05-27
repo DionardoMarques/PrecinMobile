@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 
 // Routes
 const UserRoutes = require("./routes/UserRoutes.js");
@@ -12,7 +13,10 @@ const cors = require("cors");
 app.use(cors());
 
 // Public folder for images
-app.use(express.static("public"));
+app.use(
+	"/files",
+	express.static(path.resolve(__dirname, "src", "public", "images"))
+);
 
 // Middleware
 app.use(express.json());
