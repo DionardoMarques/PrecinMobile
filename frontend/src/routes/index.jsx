@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 
 import { SignIn } from "../screens/Signin/SignIn";
@@ -11,7 +11,10 @@ import { AuthContext } from "../contexts/UserContext";
 
 export function Routes() {
 	const [loading, setIsLoading] = useState(false);
-	const { authenticated } = useContext(AuthContext);
+	const { authenticated, checkUser } = useContext(AuthContext);
+	useEffect(() => {
+		checkUser();
+	}, []);
 
 	if (loading) {
 		return <Loading />;

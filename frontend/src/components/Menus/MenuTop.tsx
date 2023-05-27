@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { HStack, IconButton, Image, useTheme, Icon, Box } from "native-base";
 import { User, MagnifyingGlass } from "phosphor-react-native";
 import { InputSearch } from "../Inputs/InputSearch";
@@ -7,7 +7,8 @@ import { AuthContext } from "../../contexts/UserContext";
 
 export function MenuTop(props) {
 	const { colors } = useTheme();
-	const { userInfo }: any = ({} = useContext(AuthContext));
+	const { checkUser, userInfo }: any = ({} = useContext(AuthContext));
+
 	return (
 		<HStack
 			w="full"
@@ -39,20 +40,24 @@ export function MenuTop(props) {
 			) : (
 				<></>
 			)}
+			{/* "http://10.0.2.2:3000/files/users/1683569104173.png" */}
 			<Box>
-				{/* {userInfo.image ? (
-					<Image
-						size={27}
-						borderRadius={100}
-						source={{
-							uri: "https://wallpaperaccess.com/full/317501.jpg",
-						}}
-						alt="Alternate Text"
-					/>
+				{userInfo ? (
+					userInfo.image ? (
+						<Image
+							size={27}
+							borderRadius={100}
+							source={{
+								uri: "http://10.0.2.2:3000/files/users/1685200512336.png",
+							}}
+							alt="Alternate Text"
+						/>
+					) : (
+						<IconButton icon={<User size={26} color={colors.white} />} />
+					)
 				) : (
 					<IconButton icon={<User size={26} color={colors.white} />} />
-				)} */}
-				<IconButton icon={<User size={26} color={colors.white} />} />
+				)}
 			</Box>
 		</HStack>
 	);
