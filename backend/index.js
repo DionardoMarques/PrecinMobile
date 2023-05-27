@@ -16,7 +16,6 @@ app.listen(PORT, () => {
 const cors = require("cors");
 // Config cors
 //Cors
-// app.use(cors({ credentials: true, origin: "exp://192.168.15.60:19000" }));
 app.use(cors());
 
 // Public folder for images
