@@ -14,6 +14,7 @@ export function Routes() {
 	const { authenticated, checkUser } = useContext(AuthContext);
 	useEffect(() => {
 		checkUser();
+
 	}, []);
 
 	if (loading) {
