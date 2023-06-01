@@ -17,7 +17,7 @@ export function MenuTop(props) {
 			borderColor="#ffff"
 			bg="gray.700"
 			pt={12}
-			pb={5}
+			pb={4}
 			px={6}
 		>
 			<Box>
