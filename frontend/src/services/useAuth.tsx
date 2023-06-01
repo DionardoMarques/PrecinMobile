@@ -150,5 +150,18 @@ export default function useAuth() {
 		}
 	}
 
-	return { register, authenticated, logout, login, checkUser, userInfo };
+	return {
+		register,
+		authenticated,
+		logout,
+		login,
+		checkUser,
+		userInfo,
+		updateUser,
+		deleteUser,
+		precin,
+		precao,
+		increaseList,
+		decreaseList,
+	};
 }
