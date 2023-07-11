@@ -81,7 +81,7 @@ export function Edit(props) {
 				value={confirmPassword}
 				onChangeText={setConfirmPassword}
 			/>
-			<ButtonForm mb={4} title="Edit" w="full" onPress={handleEdit} />
+			<ButtonForm mb={4} title="Salvar" w="full" onPress={handleEdit} />
 		</VStack>
 	);
 }
