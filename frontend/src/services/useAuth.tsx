@@ -50,10 +50,18 @@ export default function useAuth() {
 
 	async function updateUser(user) {
 		try {
-			const data = await api.patch(`/users/edit/`, user).then((response) => {
-				return response.data.message;
-			});
-			setUserInfo(user);
+			const data = await api
+				.patch(`/users/edit/`, user, {
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "multipart/form-data",
+					},
+				})
+				.then((response) => {
+					return response.data.message;
+				});
+			const r = await checkUser();
+			setUserInfo(r);
 		} catch (error) {
 			console.log(error.response.data.message);
 		}
@@ -122,7 +130,6 @@ export default function useAuth() {
 				return response.data;
 			});
 			setUserInfo(user);
-			console.log(user);
 			return user;
 		} catch (error) {
 			console.log("Erro: ", error.response.data.message);

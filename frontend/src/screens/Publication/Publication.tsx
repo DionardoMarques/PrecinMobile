@@ -29,21 +29,23 @@ export function Publication() {
 	const [market, setMarket] = useState();
 	const [address, setAddress] = useState();
 	const [image, setImage] = useState("");
+
+	const [imgFormat, setImgFormat] = useState();
+
+	const formData = new FormData();
 	async function handlePost() {
-		const formData = new FormData();
 		const post = {
-			name: name,
+			product: name,
 			price: price,
 			market: market,
 			address: address,
+			productImage: imgFormat,
 		};
-		const postFormData = await Object.keys(post).forEach((key) =>
-			formData.append(key, post[key])
-		);
+		await Object.keys(post).forEach((key) => formData.append(key, post[key]));
 		try {
-			await PostService.create(postFormData);
+			await PostService.create(formData);
 		} catch (error) {
-			console.log(error);
+			console.log(error.response.data);
 		}
 	}
 	const handleImagePicker = async () => {
@@ -55,11 +57,33 @@ export function Publication() {
 			quality: 1,
 		});
 
-		console.log(result);
-
 		if (!result.canceled) {
 			setImage(result.assets[0].uri);
 			setControllerImage(true);
+			const filename = result.assets[0].uri.substring(
+				result.assets[0].uri.lastIndexOf("/") + 1,
+				result.assets[0].uri.length
+			);
+			const extend = filename.split(".")[1];
+			setImgFormat(
+				JSON.parse(
+					JSON.stringify({
+						name: filename,
+						uri: result.assets[0].uri,
+						type: "image/" + extend,
+					})
+				)
+			);
+			// formData.append(
+			// 	"file",
+			// 	JSON.parse(
+			// 		JSON.stringify({
+			// 			name: filename,
+			// 			uri: result.assets[0].uri,
+			// 			type: "image/" + extend,
+			// 		})
+			// 	)
+			// );
 		}
 	};
 

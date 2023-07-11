@@ -48,7 +48,7 @@ export function MenuTop(props) {
 							size={27}
 							borderRadius={100}
 							source={{
-								uri: "http://10.0.2.2:3000/files/users/1685200512336.png",
+								uri: `http://10.0.2.2:3000/files/users/${userInfo.image}`,
 							}}
 							alt="Alternate Text"
 						/>

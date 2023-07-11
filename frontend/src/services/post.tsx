@@ -6,11 +6,11 @@ const getToken = async () => {
 };
 
 const PostService = {
-	getAll: () => Api.get("posts/getposts"),
 	getId: (id) => Api.get(`posts/${id}`),
 	create: (params) =>
 		Api.post("posts/createpost", params, {
 			headers: {
+				Accept: "application/json",
 				"Content-Type": "multipart/form-data",
 			},
 		}),
