@@ -25,7 +25,6 @@ export function Home() {
 		const fetchedPosts = await getPosts();
 		setPosts(fetchedPosts);
 	};
-
 	return (
 		<VStack flex={1} pb={6} bg="gray.700">
 			<MenuTop search={true}></MenuTop>
