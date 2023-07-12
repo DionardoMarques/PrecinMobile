@@ -14,5 +14,12 @@ const PostService = {
 				"Content-Type": "multipart/form-data",
 			},
 		}),
+	edit: (id, params) =>
+		Api.patch(`posts/${id}`, params, {
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "multipart/form-data",
+			},
+		}),
 };
 export default PostService;
