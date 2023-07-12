@@ -10,6 +10,16 @@ export async function getPosts() {
 	}
 }
 
+export async function getUserPosts() {
+	try {
+		const response = await api.get("posts/getuserposts");
+		return response.data.posts;
+	} catch (error) {
+		console.error("Falha ao buscar as postagens:", error);
+		return [];
+	}
+}
+
 export async function getPostById(id) {
 	try {
 		const response = await api.get(`posts/${id}`);
