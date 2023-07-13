@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
 	VStack,
 	useTheme,
@@ -7,8 +7,10 @@ import {
 	ScrollView,
 	Icon,
 	Button,
+	HStack,
+	Heading,
 } from "native-base";
-import { MenuTop } from "../../../components/Menus/MenuTop";
+import { TouchableOpacity } from "react-native";
 import {
 	Camera,
 	Image as Img,
@@ -16,13 +18,18 @@ import {
 	CurrencyDollarSimple,
 	Storefront,
 	MapPin,
+	WarningCircle,
 } from "phosphor-react-native";
 import { InputCamp } from "../../../components/Inputs/InputCamp";
 import { ButtonForm } from "../../../components/Buttons/ButtonForm";
 import PostService from "../../../services/post";
 import { getPostById, editPost } from "../../../services/usePost";
 import { Loading } from "../../../components/Loadings/Loading";
-export function EditPost({ id = "64acc1c7ddd0bae9474d0aad" }) {
+import { ResultContext } from "../../../contexts/SearchResult";
+import { useToast } from "native-base";
+export function EditPost({ id, controllerLayout }) {
+	const toast = useToast();
+	const { fetchPostsz, fetchPostsUser }: any = ({} = useContext(ResultContext));
 	const [controllerImage, setControllerImage] = useState(false);
 
 	const [imgFormat, setImgFormat] = useState();
@@ -71,14 +78,28 @@ export function EditPost({ id = "64acc1c7ddd0bae9474d0aad" }) {
 		}
 		await Object.keys(post).forEach((key) => formData.append(key, post[key]));
 		try {
-			// await editPost(id, formData);
 			await PostService.edit(id, formData);
-			console.log("foi");
+			await fetchPostsz();
+			await fetchPostsUser();
+			toast.show({
+				description: "Postagem editada com sucesso!",
+			});
 		} catch (error) {
 			console.log(error.response.data);
 		}
 	}
-
+	async function deletePostUser() {
+		try {
+			await PostService.delete(id);
+			await fetchPostsz();
+			await fetchPostsUser();
+			toast.show({
+				description: "Postagem deletada com sucesso!",
+			});
+		} catch (error) {
+			console.log(error.response.data);
+		}
+	}
 	const { colors } = useTheme();
 	return (
 		<>
@@ -162,6 +183,19 @@ export function EditPost({ id = "64acc1c7ddd0bae9474d0aad" }) {
 						onPress={handlePost}
 						mb={4}
 						title="Editar postagem"
+						w="full"
+					/>
+					<ButtonForm
+						onPress={deletePostUser}
+						mb={4}
+						title={"Deletar postagem"}
+						w="full"
+						bg="red.400"
+					/>
+					<ButtonForm
+						onPress={controllerLayout}
+						mb={4}
+						title="Voltar"
 						w="full"
 					/>
 				</VStack>

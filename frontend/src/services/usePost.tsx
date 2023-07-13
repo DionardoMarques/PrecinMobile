@@ -15,7 +15,8 @@ export async function getUserPosts() {
 		const response = await api.get("posts/getuserposts");
 		return response.data.posts;
 	} catch (error) {
-		console.error("Falha ao buscar as postagens:", error);
+		// console.error("Falha ao buscar as postagens:", error.response.data);
+		// console.error("Falha ao buscar as postagens:", error);
 		return [];
 	}
 }
@@ -42,6 +43,16 @@ export async function editPost(id, post) {
 	} catch (error) {
 		console.error("Falha ao editar a postagem:", error);
 		return [];
+	}
+}
+
+export async function deletePost(id) {
+	try {
+		const response = await api.delete(`posts/${id}`);
+		return response.data.user;
+	} catch (error) {
+		console.error("Falha ao deletar a postagem:", error);
+		return null;
 	}
 }
 

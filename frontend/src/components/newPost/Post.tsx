@@ -18,8 +18,10 @@ import {
 	ThumbsDown,
 	ChatText,
 	MapPin,
+	Gear,
 } from "phosphor-react-native";
 import { AuthContext } from "../../contexts/UserContext";
+import { useToast } from "native-base";
 export function Post({
 	id,
 	userName,
@@ -32,13 +34,19 @@ export function Post({
 	address,
 	userPhoto,
 	productImage,
+	fav,
+	type,
+	controllerLayout,
 }) {
+	const toast = useToast();
 	const { colors } = useTheme();
-	const { precin, precao, userInfo }: any = ({} = useContext(AuthContext));
+	const { precin, precao, userInfo, increaseList, decreaseList }: any = ({} =
+		useContext(AuthContext));
 	const [precinCount, setPrecinCount] = useState(like.length);
 	const [precaoCount, setPrecaoCount] = useState(dislike.length);
 	const [precinController, setPrecinController] = useState(false);
 	const [precaoController, setPrecaoController] = useState(false);
+	const [favController, setFavController] = useState(false);
 
 	const [isModalVisible, setModalVisible] = useState(false);
 
@@ -47,6 +55,7 @@ export function Post({
 	const [selectedAddress, setSelectedAddress] = useState(null);
 	useEffect(() => {
 		verifyButtons();
+		verifyFav();
 	}, []);
 
 	function verifyButtons() {
@@ -56,6 +65,11 @@ export function Post({
 			if (dislike.indexOf(userInfo._id) > -1) {
 				setPrecaoController(true);
 			}
+		}
+	}
+	function verifyFav() {
+		if (fav.indexOf(id) > -1) {
+			setFavController(true);
 		}
 	}
 
@@ -94,6 +108,24 @@ export function Post({
 			}
 		}
 	}
+	function handlerFav() {
+		if (favController) {
+			decreaseList(id);
+			setFavController(false);
+			toast.show({
+				description: "Retirado da lista",
+			});
+		} else {
+			increaseList(id);
+			setFavController(true);
+			toast.show({
+				description: "Adicionado a lista",
+			});
+		}
+	}
+	function controllerInvoc() {
+		controllerLayout(id);
+	}
 	return (
 		<Box
 			key={id}
@@ -130,11 +162,16 @@ export function Post({
 					/>
 					<Text color="white">{userName}</Text>
 				</Box>
-				<Pressable>
-					<ShoppingCart color={colors.white} size={20} />
-				</Pressable>
+				{type ? (
+					<Pressable onPress={() => controllerInvoc()}>
+						<Gear color={colors.white} size={20} />
+					</Pressable>
+				) : (
+					<Pressable onPress={() => handlerFav()}>
+						<ShoppingCart color={favController ? "gray" : "white"} size={20} />
+					</Pressable>
+				)}
 			</Box>
-
 			{/* Imagem/Nome/Preço/Mercado produto */}
 			<Box flexDirection="row" alignItems="center" mb={2}>
 				<Image

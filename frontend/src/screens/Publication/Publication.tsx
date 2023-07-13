@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
 	VStack,
 	useTheme,
@@ -21,7 +21,11 @@ import { InputCamp } from "../../components/Inputs/InputCamp";
 import { ButtonForm } from "../../components/Buttons/ButtonForm";
 import * as ImagePicker from "expo-image-picker";
 import PostService from "../../services/post";
+import { useToast } from "native-base";
+import { ResultContext } from "../../contexts/SearchResult";
 export function Publication() {
+	const toast = useToast();
+	const { fetchPostsz, fetchPostsUser }: any = ({} = useContext(ResultContext));
 	const [controllerImage, setControllerImage] = useState(false);
 
 	const [name, setName] = useState();
@@ -44,6 +48,11 @@ export function Publication() {
 		await Object.keys(post).forEach((key) => formData.append(key, post[key]));
 		try {
 			await PostService.create(formData);
+			await fetchPostsz();
+			await fetchPostsUser();
+			toast.show({
+				description: "Postado com sucesso!",
+			});
 		} catch (error) {
 			console.log(error.response.data);
 		}

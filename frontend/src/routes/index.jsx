@@ -6,15 +6,13 @@ import { Loading } from "../components/Loadings/Loading";
 
 import { AppRoutes } from "./app.routes";
 import { Routes as Menu } from "./menu.routes.tsx";
-
 import { AuthContext } from "../contexts/UserContext";
 
 export function Routes() {
 	const [loading, setIsLoading] = useState(false);
-	const { authenticated, checkUser } = useContext(AuthContext);
+	const { authenticated, checkUser, userInfo } = useContext(AuthContext);
 	useEffect(() => {
 		checkUser();
-
 	}, []);
 
 	if (loading) {
@@ -24,7 +22,7 @@ export function Routes() {
 	return (
 		<NavigationContainer>
 			{/* {user ? <AppRoutes /> : <SignIn />} */}
-			{authenticated ? <Menu /> : <SignIn />}
+			{authenticated ? userInfo ? <Menu /> : <Loading /> : <SignIn />}
 		</NavigationContainer>
 	);
 }

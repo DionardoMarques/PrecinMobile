@@ -21,5 +21,6 @@ const PostService = {
 				"Content-Type": "multipart/form-data",
 			},
 		}),
+	delete: (id) => Api.delete(`posts/${id}`),
 };
 export default PostService;

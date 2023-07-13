@@ -12,6 +12,7 @@ import { Routes } from "./src/routes";
 import { NativeBaseProvider, StatusBar } from "native-base";
 
 import AuthProvider from "./src/contexts/UserContext";
+import ResultProvider from "./src/contexts/SearchResult";
 
 export default function App() {
 	const [fontsLoaded] = useFonts({ Roboto_400Regular, Roboto_700Bold });
@@ -23,7 +24,15 @@ export default function App() {
 				backgroundColor="transparent"
 				translucent
 			/>
-			<AuthProvider>{fontsLoaded ? <Routes /> : <Loading />}</AuthProvider>
+			<AuthProvider>
+				{fontsLoaded ? (
+					<ResultProvider>
+						<Routes />
+					</ResultProvider>
+				) : (
+					<Loading />
+				)}
+			</AuthProvider>
 		</NativeBaseProvider>
 	);
 }

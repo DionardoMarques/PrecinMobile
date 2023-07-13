@@ -8,6 +8,7 @@ import {
 	Image,
 	Icon,
 	Button,
+	ScrollView,
 } from "native-base";
 import { ButtonForm } from "../../components/Buttons/ButtonForm";
 import { AuthContext } from "../../contexts/UserContext";
@@ -107,75 +108,87 @@ export function Edit(props) {
 		}
 	};
 	return (
-		<VStack flex={1} alignItems="center" bg="gray.700" px={8} pt={14}>
-			{!controllerImage ? (
-				<>
+		<ScrollView flex={1} px={5} bg="gray.700">
+			<VStack flex={1} alignItems="center" bg="gray.700" px={8} pt={14}>
+				{!controllerImage ? (
+					<>
+						<Image
+							size={150}
+							borderRadius={100}
+							source={{
+								uri: `http://10.0.2.2:3000/files/users/${userInfo.image}`,
+							}}
+							alt="userImage"
+						/>
+					</>
+				) : (
 					<Image
 						size={150}
 						borderRadius={100}
 						source={{
-							uri: `http://10.0.2.2:3000/files/users/${userInfo.image}`,
+							uri: image,
 						}}
 						alt="userImage"
+						mb={4}
 					/>
-				</>
-			) : (
-				<Image
-					size={150}
-					borderRadius={100}
-					source={{
-						uri: image,
-					}}
-					alt="userImage"
+				)}
+				<Button
+					variant="unstyled"
+					width={75}
+					height={30}
+					onPress={handleImagePicker}
+				>
+					<Camera color="white" size={28} />
+				</Button>
+				<Heading color="gray.100" fontSize="xl" mt={5} mb={5}>
+					Edit Profile
+				</Heading>
+				<InputCamp
 					mb={4}
+					placeholder="Nome"
+					InputLeftElement={
+						<Icon as={<User color={colors.gray[300]} />} ml={4} />
+					}
+					value={name}
+					onChangeText={setName}
 				/>
-			)}
-			<Button
-				variant="unstyled"
-				width={75}
-				height={30}
-				onPress={handleImagePicker}
-			>
-				<Camera color="white" size={28} />
-			</Button>
-			<Heading color="gray.100" fontSize="xl" mt={5} mb={5}>
-				Edit Profile
-			</Heading>
-			<InputCamp
-				mb={4}
-				placeholder="Nome"
-				InputLeftElement={
-					<Icon as={<User color={colors.gray[300]} />} ml={4} />
-				}
-				value={name}
-				onChangeText={setName}
-			/>
-			<InputCamp
-				mb={4}
-				placeholder="E-mail"
-				InputLeftElement={
-					<Icon as={<Envelope color={colors.gray[300]} />} ml={4} />
-				}
-				value={email}
-				onChangeText={setEmail}
-			/>
-			<InputCamp
-				mb={4}
-				placeholder="Senha"
-				InputLeftElement={<Icon as={<Key color={colors.gray[300]} />} ml={4} />}
-				secureTextEntry
-				value={password}
-				onChangeText={setPassword}
-			/>
-			<InputCamp
-				mb={8}
-				placeholder="Confirmar Senha"
-				InputLeftElement={<Icon as={<Key color={colors.gray[300]} />} ml={4} />}
-				secureTextEntry
-				value={confirmPassword}
-				onChangeText={setConfirmPassword}
-			/>
-			<ButtonForm mb={4} title="Salvar" w="full" onPress={handleEdit} />
-		</VStack>
+				<InputCamp
+					mb={4}
+					placeholder="E-mail"
+					InputLeftElement={
+						<Icon as={<Envelope color={colors.gray[300]} />} ml={4} />
+					}
+					value={email}
+					onChangeText={setEmail}
+				/>
+				<InputCamp
+					mb={4}
+					placeholder="Senha"
+					InputLeftElement={
+						<Icon as={<Key color={colors.gray[300]} />} ml={4} />
+					}
+					secureTextEntry
+					value={password}
+					onChangeText={setPassword}
+				/>
+				<InputCamp
+					mb={8}
+					placeholder="Confirmar Senha"
+					InputLeftElement={
+						<Icon as={<Key color={colors.gray[300]} />} ml={4} />
+					}
+					secureTextEntry
+					value={confirmPassword}
+					onChangeText={setConfirmPassword}
+				/>
+				<ButtonForm mb={4} title="Salvar" w="full" onPress={handleEdit} />
+				<ButtonForm
+					mb={4}
+					title="Voltar"
+					w="full"
+					onPress={props.handleLayout}
+				/>
+			</VStack>
+		</ScrollView>
 	);
 }
