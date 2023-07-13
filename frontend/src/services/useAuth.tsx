@@ -1,11 +1,12 @@
 import api from "../services/api";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useToast } from "native-base";
 
 export default function useAuth() {
 	const [authenticated, setAuthenticated] = useState(false);
 	const [userInfo, setUserInfo] = useState({});
-
+	const toast = useToast();
 	// Verify token in Storage
 	useEffect(() => {
 		getToken();
@@ -34,6 +35,9 @@ export default function useAuth() {
 			await authUser(data);
 		} catch (error) {
 			console.log("Erro: ", error.response.data);
+			toast.show({
+				description: error.response.data.message,
+			});
 		}
 	}
 
@@ -45,6 +49,9 @@ export default function useAuth() {
 			await authUser(data);
 		} catch (error) {
 			console.log(error.response.data.message);
+			toast.show({
+				description: error.response.data.message,
+			});
 		}
 	}
 
@@ -64,6 +71,9 @@ export default function useAuth() {
 			setUserInfo(r);
 		} catch (error) {
 			console.log(error.response.data.message);
+			toast.show({
+				description: error.response.data.message,
+			});
 		}
 	}
 
@@ -75,6 +85,9 @@ export default function useAuth() {
 			logout();
 		} catch (error) {
 			console.log(error.response.data.message);
+			toast.show({
+				description: error.response.data.message,
+			});
 		}
 	}
 

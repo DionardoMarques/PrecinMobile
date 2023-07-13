@@ -4,10 +4,12 @@ import { User, MagnifyingGlass } from "phosphor-react-native";
 import { InputSearch } from "../Inputs/InputSearch";
 
 import { AuthContext } from "../../contexts/UserContext";
+import { ResultContext } from "../../contexts/SearchResult";
 
 export function MenuTop(props) {
 	const { colors } = useTheme();
 	const { checkUser, userInfo }: any = ({} = useContext(AuthContext));
+	const { result, setResult }: any = ({} = useContext(ResultContext));
 
 	return (
 		<HStack
@@ -32,9 +34,11 @@ export function MenuTop(props) {
 				<Box>
 					<InputSearch
 						placeholder="Busque por precinhos"
-						// InputRightElement={
-						// 	<Icon as={<MagnifyingGlass color={colors.gray[300]} />} mr={3} />
-						// }
+						InputRightElement={
+							<Icon as={<MagnifyingGlass color={colors.gray[300]} />} mr={3} />
+						}
+						value={result}
+						onChangeText={setResult}
 					/>
 				</Box>
 			) : (
